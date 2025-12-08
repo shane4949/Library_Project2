@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 
 const Loan = require("../models/Loan");
 const Book = require("../models/Book");
-const loanRoutes = require("../routes/loans");
+const loanRoutes = require("../routes/Loans");
 
 describe("Loan Routes", () => {
   let app;
@@ -28,7 +28,7 @@ describe("Loan Routes", () => {
     ioMock = { emit: sinon.spy() };
     app.set("io", ioMock);
 
-    app.use("/api/loans", loanRoutes);
+    app.use("/api/Loans", loanRoutes);
   });
 
   afterEach(() => {
@@ -48,7 +48,7 @@ describe("Loan Routes", () => {
     });
 
     const res = await request(app)
-      .get("/api/loans/my")
+      .get("/api/Loans/my")
       .set("Authorization", `Bearer ${memberToken}`);
 
     expect(res.status).to.equal(200);
@@ -61,7 +61,7 @@ describe("Loan Routes", () => {
   -----------------------------------------*/
   it("POST /borrow should return 400 if bookId missing", async () => {
     const res = await request(app)
-      .post("/api/loans/borrow")
+      .post("/api/Loans/borrow")
       .set("Authorization", `Bearer ${memberToken}`)
       .send({});
 
@@ -76,7 +76,7 @@ describe("Loan Routes", () => {
     }));
 
     const res = await request(app)
-      .post("/api/loans/borrow")
+      .post("/api/Loans/borrow")
       .set("Authorization", `Bearer ${memberToken}`)
       .send({ bookId: "book123" });
 
@@ -92,7 +92,7 @@ describe("Loan Routes", () => {
       .callsFake(async () => null);
 
     const res = await request(app)
-      .post("/api/loans/borrow")
+      .post("/api/Loans/borrow")
       .set("Authorization", `Bearer ${memberToken}`)
       .send({ bookId: "book123" });
 
@@ -115,7 +115,7 @@ describe("Loan Routes", () => {
     }));
 
     const res = await request(app)
-      .post("/api/loans/borrow")
+      .post("/api/Loans/borrow")
       .set("Authorization", `Bearer ${memberToken}`)
       .send({ bookId: "book123" });
 
@@ -131,7 +131,7 @@ describe("Loan Routes", () => {
     sinon.stub(Loan, "findOne").callsFake(async () => null);
 
     const res = await request(app)
-      .put("/api/loans/123/return")
+      .put("/api/Loans/123/return")
       .set("Authorization", `Bearer ${memberToken}`);
 
     expect(res.status).to.equal(404);
@@ -153,7 +153,7 @@ describe("Loan Routes", () => {
       .callsFake(async () => ({ _id: "book123", copiesAvailable: 7 }));
 
     const res = await request(app)
-      .put("/api/loans/loan123/return")
+      .put("/api/Loans/loan123/return")
       .set("Authorization", `Bearer ${memberToken}`);
 
     expect(res.status).to.equal(200);
