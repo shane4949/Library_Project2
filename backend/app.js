@@ -6,7 +6,7 @@ const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
 const adminRoutes = require("./routes/admin");
 const publicBookRoutes = require("./routes/books");
-const loanRoutes = require("./routes/loans");
+const loanRoutes = require("./routes/Loans");
 
 const app = express();
 
