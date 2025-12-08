@@ -23,7 +23,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/books", publicBookRoutes);
-app.use("/api/loans", loanRoutes);
+app.use("/api/Loans", loanRoutes);
 
 app.get("/", (_req, res) => res.send("Library API is running"));
 
