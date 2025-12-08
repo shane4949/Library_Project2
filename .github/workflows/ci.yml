@@ -23,4 +23,4 @@ jobs:
         run: cd backend && npm install
 
       - name: Run backend tests
-        run: cd backend && npm test
+        run: cd backend && CI=true npm test

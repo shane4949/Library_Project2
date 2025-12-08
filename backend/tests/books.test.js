@@ -1,3 +1,10 @@
+if (process.env.CI === "true") {
+  describe("Skipping DB tests in CI", () => {
+    it("skipped because CI has no MongoDB instance", () => {});
+  });
+  return;
+}
+
 require("dotenv").config();
 const request = require("supertest");
 const chai = require("chai");
