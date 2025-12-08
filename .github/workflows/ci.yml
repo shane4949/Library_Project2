@@ -20,7 +20,7 @@ jobs:
           node-version: 18
 
       - name: Install backend dependencies
-        run: npm install
+        run: cd backend && npm install
 
       - name: Run backend tests
-        run: npm test
+        run: cd backend && npm test
