@@ -1,0 +1,31 @@
+services:
+  database:
+    image: mongo
+    ports:
+      - "83:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  backend:
+    image: node:22.9.0
+    volumes:
+      - ./backend:/usr/src/app:rw
+    ports:
+      - "82:9000"
+    working_dir: /usr/src/app
+    command: sh -c "
+      chmod +x run.sh &&
+      ./run.sh"
+    links:
+      - database
+  frontend:
+    image: node:24.12.0
+    working_dir: /usr/src/app
+    volumes:
+      - ./frontend:/usr/src/app
+    ports:
+      - "81:5173"
+    command: sh -c "npm install && npm run dev -- --host"
+    depends_on:
+      - backend
