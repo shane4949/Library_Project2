@@ -7,7 +7,7 @@ const User = require("../models/User")
 ;(async () => {
   try {
     const email = process.env.SEED_ADMIN_EMAIL || "admin@example.com"
-    const password = process.env.SEED_ADMIN_PASSWORD || "Admin123!"
+    const password = process.env.SEED_ADMIN_PASSWORD || "password"
 
     await mongoose.connect(process.env.MONGODB_URI, {
       dbName: process.env.DB_NAME,

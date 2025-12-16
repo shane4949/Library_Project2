@@ -1,31 +1,48 @@
+version: '3.8'
+
 services:
   database:
-    image: mongo
+    image: mongo:6.0 # Pinned version is safer than 'latest'
     ports:
       - "83:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongo-data:/data/db # <--- CRITICAL: Keeps your data safe!
 
   backend:
-    image: node:22.9.0
+    image: node:22 # Matches frontend version for consistency
     volumes:
       - ./backend:/usr/src/app:rw
+      - /usr/src/app/node_modules # Prevents host OS from overwriting container modules
     ports:
       - "82:9000"
+    environment:
+      - PORT=9000
+      # Internal connection uses standard port 27017 (this is correct!)
+      - MONGODB_URI=mongodb://admin:example@database:27017/library?authSource=admin
+      - JWT_SECRET=supersecret
+      - NODE_ENV=development
     working_dir: /usr/src/app
-    command: sh -c "
-      chmod +x run.sh &&
-      ./run.sh"
-    links:
+    command: sh -c "npm install && chmod +x run.sh && ./run.sh"
+    depends_on:
       - database
+
   frontend:
-    image: node:24.12.0
+    image: node:22
     working_dir: /usr/src/app
     volumes:
       - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
     ports:
       - "81:5173"
+    environment:
+      - VITE_API_URL=http://localhost:82 # Helper for frontend to find backend
     command: sh -c "npm install && npm run dev -- --host"
     depends_on:
       - backend
+
+# Define the volume so data persists across restarts
+volumes:
+  mongo-data:
