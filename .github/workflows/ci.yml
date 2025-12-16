@@ -10,7 +10,7 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
-    # 1. Add MongoDB Service Container
+    # 1. Start MongoDB Service
     services:
       mongodb:
         image: mongo:5.0
@@ -30,11 +30,7 @@ jobs:
         run: cd backend && npm install
 
       - name: Run backend tests
-        # 2. Add Environment Variables here
-        env:
-          # Point to the service container (localhost:27017)
-          # No username/password needed for the default CI mongo container
-          MONGODB_TEST_URI: mongodb://localhost:27017/LibraryDB_test
-          JWT_SECRET: "ci_test_secret"
-          PORT: 9000
-        run: cd backend && CI=true npm test
+        # 2. We pass the DB URI explicitly in the command line to ensure it exists
+        run: |
+          cd backend
+          MONGODB_TEST_URI="mongodb://localhost:27017/LibraryDB_test" JWT_SECRET="ci_secret" npm test
